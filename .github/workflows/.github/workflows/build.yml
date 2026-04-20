@@ -8,22 +8,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
 
-    - run: sudo apt update && sudo apt install repo -y
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y repo git curl python3
 
-    - run: |
+    - name: Init repo
+      run: |
         mkdir twrp
         cd twrp
         repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-8.1
 
-    - run: |
+    - name: Sync repo
+      run: |
         cd twrp
         repo sync --depth=1
 
-    cp -r android_device_samsung_j2coreux twrp/device/samsung/j2corelte
+    - name: Add device tree
+      run: |
+        cd twrp
+        mkdir -p device/samsung/j2corelte
+        cp -r ../* device/samsung/j2corelte/
 
-    - run: |
+    - name: Build
+      run: |
         cd twrp
         source build/envsetup.sh
         lunch omni_j2corelte-eng
