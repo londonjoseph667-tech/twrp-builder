@@ -21,7 +21,7 @@ jobs:
         cd twrp
         repo sync --depth=1
 
-    - run: cp -r j2corelte twrp/device/samsung/
+    cp -r android_device_samsung_j2coreux twrp/device/samsung/j2corelte
 
     - run: |
         cd twrp
