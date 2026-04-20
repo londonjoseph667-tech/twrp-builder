@@ -1,0 +1,30 @@
+name: Build TWRP
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - run: sudo apt update && sudo apt install repo -y
+
+    - run: |
+        mkdir twrp
+        cd twrp
+        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-8.1
+
+    - run: |
+        cd twrp
+        repo sync --depth=1
+
+    - run: cp -r j2corelte twrp/device/samsung/
+
+    - run: |
+        cd twrp
+        source build/envsetup.sh
+        lunch omni_j2corelte-eng
+        make recoveryimage
